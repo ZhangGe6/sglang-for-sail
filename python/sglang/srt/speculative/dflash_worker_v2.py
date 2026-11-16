@@ -110,7 +110,7 @@ from sglang.srt.speculative.spec_utils import (
     draft_pp_context,
     draft_tp_context,
 )
-from sglang.srt.utils import async_h2d, is_cuda, is_hip, is_npu, is_xpu
+from sglang.srt.utils import async_h2d, is_cuda, is_hip, is_npu, is_sail, is_xpu
 
 _is_npu = is_npu()
 
@@ -740,7 +740,7 @@ class DFlashWorkerV2(BaseSpecWorker):
                     "device graph capture.",
                     type(current_platform).__name__,
                 )
-            if target_dp_enabled and capture_decode_cuda_graph:
+            if not is_sail() and target_dp_enabled and capture_decode_cuda_graph:
                 # Keep the eager-draft policy for idle/unequal DP batches.
                 # The narrowed draft scope hides the target's DP flag.
                 capture_decode_cuda_graph = False
